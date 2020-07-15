@@ -9,8 +9,146 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+let teamMembers = [];
 
+promptManager()
+function promptManager() {
+    inquirer.prompt([
+              {
+                type: "input",
+                name: "name",
+                message: "What is your Name?"
+              },
+              {
+                type: "input",
+                name: "id",
+                message: "What is your ID?"
+              },
+              {
+                type: "input",
+                name: "email",
+                message: "What is your email?"
+              },
+              {
+                type: "input",
+                name: "officenumber",
+                message: "What is your office number?"
+            },
+            {
+                type: "checkbox",
+                name: "employeeType",
+                message: "Do you want to add a new employee?",
+                choices: ["Engineer", "Intern", "None"]
+            }
+    ]).then(function(answers){
+            let x = new Manager(answers.name,answers.id,answers.email,answers.officenumber)
+            teamMembers.push(x)
+        if(answers.employeeType == "None"){
+            createHTML()
+        }
+        if(answers.employeeType == "Intern"){
+            promptIntern()
+        }
+        if(answers.employeeType == "Engineer"){
+            promptEngineer()
+        }       
+       
+    })
+}
 
+function promptIntern() {
+    inquirer.prompt([
+              {
+                type: "input",
+                name: "name",
+                message: "What is your Name?"
+              },
+              {
+                type: "input",
+                name: "id",
+                message: "What is your ID?"
+              },
+              {
+                type: "input",
+                name: "email",
+                message: "What is your email?"
+              },
+              {
+                type: "input",
+                name: "school",
+                message: "What school do you attend?"
+            },
+            {
+                type: "checkbox",
+                name: "employeeType",
+                message: "Do you want to add a new employee?",
+                choices: ["Engineer", "Intern", "None"]
+            }
+    ]).then(function(answers){
+            let x = new Intern(answers.name,answers.id,answers.email,answers.school)
+            teamMembers.push(x)
+        if(answers.employeeType == "None"){
+            createHTML()
+        }
+        if(answers.employeeType == "Intern"){
+            promptIntern()
+        }
+        if(answers.employeeType == "Engineer"){
+            promptEngineer()
+        }       
+       
+    })
+}
+
+function promptEngineer() {
+    inquirer.prompt([
+              {
+                type: "input",
+                name: "name",
+                message: "What is your Name?"
+              },
+              {
+                type: "input",
+                name: "id",
+                message: "What is your ID?"
+              },
+              {
+                type: "input",
+                name: "email",
+                message: "What is your email?"
+              },
+              {
+                type: "input",
+                name: "github",
+                message: "What is your github username?"
+            },
+            {
+                type: "checkbox",
+                name: "employeeType",
+                message: "Do you want to add a new employee?",
+                choices: ["Engineer", "Intern", "None"]
+            }
+    ]).then(function(answers){
+            let x = new Engineer(answers.name,answers.id,answers.email,answers.github)
+            teamMembers.push(x)
+        if(answers.employeeType ==  "None"){
+            createHTML()
+        }
+        if(answers.employeeType == "Intern"){
+            promptIntern()
+        }
+        if(answers.employeeType == "Engineer"){
+            promptEngineer()
+        }              
+    })
+} 
+function createHTML(){
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR)
+      }
+  //******  teamMembers in fs.writeFileSync(outPath,render(teamMembers),"utf-8); is the array variable you are pushing team member objects to. IF your array is labeled differently make sure to change it here as well
+      fs.writeFileSync(outputPath, render(teamMembers), "utf-8");
+    }
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
